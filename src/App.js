@@ -46,7 +46,7 @@ function App() {
     <Router>
       <Navbar />
       <div className="App">
-        <h1>🍳 Yemek Tarifleri</h1>
+       
         <form onSubmit={searchRecipes}>
           <input
             value={query}
