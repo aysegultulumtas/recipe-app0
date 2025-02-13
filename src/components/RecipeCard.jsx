@@ -1,22 +1,40 @@
 
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './RecipeCard.css'; 
+
 const RecipeCard = ({ recipe }) => {
-    const addToFavorites = () => {
-      const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      if (!favorites.some(fav => fav.uri === recipe.uri)) {
-        const newFavorites = [...favorites, recipe];
-        localStorage.setItem('favorites', JSON.stringify(newFavorites));
-        alert('Favorilere eklendi! 🎉');
-      }
-    };
-  
-    return (
-      <div className="recipe-card">
-        <h3>{recipe.label}</h3>
-        <img src={recipe.image} alt={recipe.label} />
-        <button onClick={addToFavorites}>❤️ Favorilere Ekle</button>
+
+  if (!recipe) {
+    return null;
+  }
+
+  return (
+    <div className="recipe-card">
+      <img 
+        src={recipe.image} 
+        alt={recipe.label} 
+        className="recipe-image"
+      />
+      <div className="recipe-info">
+        <h3 className="recipe-title">{recipe.label}</h3>
+        <p className="recipe-time">
+          ⏱️ {recipe.totalTime || 20} dakika
+        </p>
+        <div className="recipe-actions">
+          <Link 
+            to={`/recipe/${recipe.uri.split('_')[1]}`} 
+            className="detail-button"
+          >
+            Detaylar
+          </Link>
+          <button className="favorite-button">
+            ❤️ Favorilere Ekle
+          </button>
+        </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
 
-
-  export default RecipeCard; 
+export default RecipeCard
