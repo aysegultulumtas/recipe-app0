@@ -8,6 +8,7 @@ const Navbar = () => {
       <div className="links">
         <Link to="/">Ana Sayfa</Link>
         <Link to="/favorites">Favoriler</Link>
+       
       </div>
     </nav>
   );

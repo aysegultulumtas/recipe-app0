@@ -1,40 +1,30 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './RecipeCard.css'; 
+import './RecipeCard.css';
 
 const RecipeCard = ({ recipe }) => {
-
-  if (!recipe) {
-    return null;
-  }
+  // recipe prop'unun undefined gelme ihtimaline karşı koruma
+  if (!recipe) return null;
 
   return (
     <div className="recipe-card">
       <img 
-        src={recipe.image} 
-        alt={recipe.label} 
+        src={recipe.strMealThumb} 
+        alt={recipe.strMeal} 
         className="recipe-image"
       />
       <div className="recipe-info">
-        <h3 className="recipe-title">{recipe.label}</h3>
-        <p className="recipe-time">
-          ⏱️ {recipe.totalTime || 20} dakika
-        </p>
-        <div className="recipe-actions">
-          <Link 
-            to={`/recipe/${recipe.uri.split('_')[1]}`} 
-            className="detail-button"
-          >
-            Detaylar
-          </Link>
-          <button className="favorite-button">
-            ❤️ Favorilere Ekle
-          </button>
-        </div>
+        <h3 className="recipe-title">{recipe.strMeal}</h3>
+        <p className="recipe-category">{recipe.strCategory}</p>
+        <Link 
+          to={`/recipe/${recipe.idMeal}`} 
+          className="detail-button"
+        >
+          Detayları Gör
+        </Link>
       </div>
     </div>
   );
 };
 
-export default RecipeCard
+export default RecipeCard;
