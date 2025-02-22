@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import RecipeCard from '../components/RecipeCard';
 
@@ -8,30 +8,42 @@ const Home = () => {
   const [sortBy, setSortBy] = useState('none');
   const [isLoading, setIsLoading] = useState(false);
   const [searchPerformed, setSearchPerformed] = useState(false); // Arama yapıldı mı?
+  const [error, setError] = useState(null); // Hata mesajı için state
 
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "https://www.themealdb.com/api/json/v1/1/";
 
   // ENTER ile arama yapma
   const handleKeyPress = (e) => {
-    if(e.key === 'Enter') {
+    if (e.key === 'Enter') {
       performSearch();
     }
   };
 
-  // Arama fonksiyonu
   const performSearch = async () => {
-    if(!query.trim()) return; // Boş arama engeli
-    
+    if (!query.trim()) {
+      setError("Lütfen bir arama sorgusu girin."); // Boş arama sorgusu hatası
+      return;
+    }
+
     setIsLoading(true);
     setSearchPerformed(true);
-    
+    setError(null); // Hata mesajını sıfırla
+
     try {
       const response = await axios.get(
-        `${API_BASE_URL}search.php?s=${query}`
+        `${API_BASE_URL}search.php?s=${encodeURIComponent(query)}`
       );
-      setRecipes(response.data.meals || []);
+      console.log('API Yanıtı:', response.data); // API yanıtını konsola yazdır
+
+      if (response.data && response.data.meals) {
+        setRecipes(response.data.meals);
+      } else {
+        setRecipes([]); // Eğer tarif yoksa boş dizi ayarla
+        setError(`"${query}" ile eşleşen tarif bulunamadı. 🥺`); // Tarif bulunamadı hatası
+      }
     } catch (error) {
       console.error('Tarifler yüklenemedi:', error);
+      setError("Tarifler yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin."); // API hatası
       setRecipes([]);
     } finally {
       setIsLoading(false);
@@ -53,7 +65,7 @@ const Home = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="🔍 Tarif ara (ENTER'a basın)"
+          placeholder="🔍 Tarif ara"
         />
         <button onClick={performSearch} className="search-button">
           Ara
@@ -69,6 +81,9 @@ const Home = () => {
         </select>
       </div>
 
+      {/* Hata Mesajı */}
+      {error && <p className="error-message">{error}</p>}
+
       {/* Sonuçlar */}
       {isLoading ? (
         <div className="loading-spinner">
@@ -77,9 +92,9 @@ const Home = () => {
         </div>
       ) : (
         <div className="recipe-grid">
-          {searchPerformed && sortedRecipes.length === 0 ? (
+          {searchPerformed && sortedRecipes.length === 0 && !error ? (
             <p className="no-results">
-              "{query}" ile eşleşen tarif bulunamadı 🥺
+              "{query}" ile eşleşen tarif bulunamadı. 🥺
             </p>
           ) : (
             sortedRecipes.map((recipe) => (

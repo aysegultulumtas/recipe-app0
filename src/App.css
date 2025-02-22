@@ -37,7 +37,7 @@ body {
   max-width: 500px;
   margin: 30px auto;
   padding: 13px;
-  border: 3px solid #4CAF50;
+  border: 10px solid #4CAF50;
   border-radius: 30px;
   font-size: 14px;
   font-weight: 400;
@@ -47,7 +47,7 @@ body {
 }
 
 .search-input:focus {
-  outline: none;
+  
   border-color: #45a049;
   box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
 }

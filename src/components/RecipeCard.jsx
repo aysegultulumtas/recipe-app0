@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import './RecipeCard.css';
 
 const RecipeCard = ({ recipe }) => {
-  // recipe prop'unun undefined gelme ihtimaline karşı koruma
-  if (!recipe) return null;
+  if (!recipe || !recipe.strMealThumb || !recipe.strMeal || !recipe.strCategory || !recipe.idMeal) {
+    return null; // Eksik veri varsa bileşeni render etme
+  }
 
   return (
     <div className="recipe-card">
@@ -26,5 +27,4 @@ const RecipeCard = ({ recipe }) => {
     </div>
   );
 };
-
 export default RecipeCard;
